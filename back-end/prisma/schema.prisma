@@ -13,3 +13,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Empresas {
+  id        String   @id @default(uuid())
+  nome      String
+  tipo      String
+  descricao String
+  historia  String?
+  vagas_id  String
+}
+
+model Vagas {
+  id         String   @id @default(uuid())
+  nome       String
+  tipo       String
+  requisitos String
+  descricao  String
+  qtd_vagas  Int
+  salario    Float
+  empresa_id String
+}
+
+model Aluno {
+  id           String   @id @default(uuid())
+  nome         String
+  cpf          String
+  telefone     String
+  cep          String
+  rua          String
+  bairro       String
+  numero       String
+  complemento  String?
+  uf           String
+  curso_id     String
+  plano_id     String
+}
+
+model Planos {
+  id    String  @id @default(uuid())
+  nome  String
+  tipo  String
+  preco Float
+}
+
+model Cursos {
+  id           String   @id @default(uuid())
+  plano_id     String
+  duracao      String?
+  professor_id String
+  descricao    String
+  nome         String
+}
+
+model Professores {
+  id           String   @id @default(uuid())
+  nome         String
+  cpf          String
+  telefone     String
+  cep          String
+  rua          String
+  bairro       String
+  numero       String
+  complemento  String?
+  uf           String
+  curso_id     String
+}
