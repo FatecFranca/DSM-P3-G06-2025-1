@@ -9,32 +9,32 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Empresas {
-  id        String   @id @default(uuid())
-  nome      String
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   tipo      String
   descricao String
   historia  String?
-  vagas_id  String
+  vagas     Vagas[]
 }
 
 model Vagas {
-  id         String   @id @default(uuid())
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   nome       String
   tipo       String
   requisitos String
   descricao  String
   qtd_vagas  Int
   salario    Float
-  empresa_id String
+  empresa_id String   @db.ObjectId
+  empresas   Empresas @relation(fields: [empresa_id], references: [id])
 }
 
 model Aluno {
-  id           String   @id @default(uuid())
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   nome         String
   cpf          String
   telefone     String
@@ -45,27 +45,32 @@ model Aluno {
   complemento  String?
   uf           String
   curso_id     String
-  plano_id     String
+  plano_id     String    @db.ObjectId
+  planos       Planos    @relation(fields: [plano_id], references: [id])
 }
 
 model Planos {
-  id    String  @id @default(uuid())
+  id    String    @id @default(auto()) @map("_id") @db.ObjectId
   nome  String
   tipo  String
   preco Float
+  curos Cursos[]
+  aluno Aluno[]
 }
 
 model Cursos {
-  id           String   @id @default(uuid())
-  plano_id     String
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  plano_id     String      @db.ObjectId
+  planos       Planos      @relation(fields: [plano_id], references: [id])
   duracao      String?
-  professor_id String
   descricao    String
   nome         String
+  professor_id String      @db.ObjectId
+  professor    Professores @relation(fields: [professor_id], references: [id])
 }
 
 model Professores {
-  id           String   @id @default(uuid())
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   nome         String
   cpf          String
   telefone     String
@@ -75,5 +80,5 @@ model Professores {
   numero       String
   complemento  String?
   uf           String
-  curso_id     String
+  curso        Cursos[]
 }
