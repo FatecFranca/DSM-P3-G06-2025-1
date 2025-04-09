@@ -1,6 +1,7 @@
 import express, { json, urlencoded } from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
+import cors from 'cors'
 
 import indexRouter from './routes/index.js'
 import usersRouter from './routes/users.js'
@@ -11,6 +12,12 @@ app.use(logger('dev'))
 app.use(json())
 app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
+
+// Configurar CORS
+app.use(cors({
+  origin: 'http://localhost:3000', // URL do frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}))
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
