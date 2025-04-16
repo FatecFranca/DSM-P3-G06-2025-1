@@ -37,6 +37,7 @@ model Aluno {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId
   nome         String
   cpf          String
+  senha        String
   telefone     String
   cep          String
   rua          String
