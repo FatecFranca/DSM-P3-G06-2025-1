@@ -45,7 +45,7 @@ model Aluno {
   numero       String
   complemento  String?
   uf           String
-  curso_id     String
+  curso_id     String?
   plano_id     String    @db.ObjectId
   planos       Planos    @relation(fields: [plano_id], references: [id])
 }
