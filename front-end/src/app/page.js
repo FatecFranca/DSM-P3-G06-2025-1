@@ -1,7 +1,11 @@
 "use client";
 
-import Home from '../views/pages/Home/home';
-
 export default function Page() {
-  return <Home />;
+  return (
+    <>
+      <div className="divtotal">
+        <h1>Tela Inicial</h1>
+      </div>
+    </>
+  );
 }

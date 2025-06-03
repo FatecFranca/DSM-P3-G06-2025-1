@@ -1,0 +1,13 @@
+body,
+html {
+    height: 100vh;
+    max-height: 100vh;
+    width: 100vw;
+    max-width: 100vw;
+}
+
+.divtotal {
+    height: 80vh;
+    width: 100vw;
+    background-color: red;
+}

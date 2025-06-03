@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./src/bin/server.js",
-    "start": "nodemon node app.js"
+    "start": "node ./src/bin/server.js"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
