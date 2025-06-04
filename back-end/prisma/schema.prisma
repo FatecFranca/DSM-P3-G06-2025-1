@@ -36,7 +36,7 @@ model Vagas {
 model Aluno {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId
   nome         String
-  cpf          String
+  cpf          String    @unique
   senha        String
   telefone     String
   cep          String
@@ -45,7 +45,6 @@ model Aluno {
   numero       String
   complemento  String?
   uf           String
-  curso_id     String?
   plano_id     String    @db.ObjectId
   planos       Planos    @relation(fields: [plano_id], references: [id])
 }
