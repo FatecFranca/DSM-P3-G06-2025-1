@@ -16,6 +16,8 @@ datasource db {
 model Empresas {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   tipo      String
+  cnpj      String    @unique
+  senha     String
   descricao String
   historia  String?
   vagas     Vagas[]
