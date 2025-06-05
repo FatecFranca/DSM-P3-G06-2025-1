@@ -14,9 +14,10 @@ datasource db {
 }
 
 model Empresas {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  nome      String
   tipo      String
-  cnpj      String    @unique
+  cnpj      String  @unique
   senha     String
   descricao String
   historia  String?
@@ -24,7 +25,7 @@ model Empresas {
 }
 
 model Vagas {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   nome       String
   tipo       String
   requisitos String
@@ -36,28 +37,29 @@ model Vagas {
 }
 
 model Aluno {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  nome         String
-  cpf          String    @unique
-  senha        String
-  telefone     String
-  cep          String
-  rua          String
-  bairro       String
-  numero       String
-  complemento  String?
-  uf           String
-  plano_id     String    @db.ObjectId
-  planos       Planos    @relation(fields: [plano_id], references: [id])
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  nome        String
+  cpf         String  @unique
+  senha       String
+  telefone    String
+  cep         String
+  rua         String
+  bairro      String
+  numero      String
+  complemento String?
+  uf          String
+  plano_id    String  @db.ObjectId
+  planos      Planos  @relation(fields: [plano_id], references: [id])
 }
 
 model Planos {
-  id    String    @id @default(auto()) @map("_id") @db.ObjectId
-  nome  String
-  tipo  String
-  preco Float
-  curos Cursos[]
-  aluno Aluno[]
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome      String
+  tipo      String
+  descricao String?
+  preco     Float
+  curos     Cursos[]
+  aluno     Aluno[]
 }
 
 model Cursos {
@@ -72,15 +74,15 @@ model Cursos {
 }
 
 model Professores {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  nome         String
-  cpf          String
-  telefone     String
-  cep          String
-  rua          String
-  bairro       String
-  numero       String
-  complemento  String?
-  uf           String
-  curso        Cursos[]
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome        String
+  cpf         String
+  telefone    String
+  cep         String
+  rua         String
+  bairro      String
+  numero      String
+  complemento String?
+  uf          String
+  curso       Cursos[]
 }

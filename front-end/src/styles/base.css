@@ -9,5 +9,6 @@ html {
 .divtotal {
     height: 80vh;
     width: 100vw;
-    background-color: red;
+    margin: var(--margin-lg);
+    background: var(--color-primary-50);
 }
