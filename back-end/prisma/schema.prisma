@@ -69,6 +69,7 @@ model Cursos {
   duracao      String?
   descricao    String
   nome         String
+  videos       String[]
   professor_id String      @db.ObjectId
   professor    Professores @relation(fields: [professor_id], references: [id])
 }
