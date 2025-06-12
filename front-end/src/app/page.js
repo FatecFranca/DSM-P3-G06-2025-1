@@ -25,15 +25,13 @@ export default function Page() {
         <h1>Tela Inicial</h1>
         <h2>Planos disponíveis:</h2>
         <ul>
-          {planos.map((plano, index) => (
-            <>
-              <li key={index}>
-                <strong>{plano.nome}</strong> - {plano.preco} - {plano.descricao}
-              </li>
+          {planos.map((plano) => (
+            <li key={plano.id}>
+              <strong>{plano.nome}</strong> - {plano.preco} - {plano.descricao}
               <Link href={`/assinar/${plano.id}`}>
                 <button>Assinar</button>
               </Link>
-            </>
+            </li>
           ))}
         </ul>
       </div>

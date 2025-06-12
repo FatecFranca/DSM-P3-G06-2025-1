@@ -5,6 +5,7 @@ import cors from 'cors'
 
 import indexRouter from './routes/index.js'
 import usersRouter from './routes/users.js'
+import authRouter from './routes/auth.js'
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(cors({
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
+app.use('/auth', authRouter)
 
 //////////////////////////////////////////////////////////////Rotas
 

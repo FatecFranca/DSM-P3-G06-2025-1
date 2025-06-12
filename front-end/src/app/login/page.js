@@ -1,9 +1,8 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import dotenv from 'dotenv';
+import { useRouter } from 'next/navigation';
 
-dotenv.config();
 const ApiLink = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LoginPage() {
@@ -21,9 +20,9 @@ export default function LoginPage() {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                // Redirecionar ou mostrar mensagem de sucesso
-                console.log('Login successful:', data);
+            if (data.success && data.user) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = '/';
             } else {
                 // Mostrar mensagem de erro
                 console.error('Login failed:', data.message);
@@ -47,9 +46,9 @@ export default function LoginPage() {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                // Redirecionar ou mostrar mensagem de sucesso
-                console.log('Login successful:', data);
+            if (data.success && data.user) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.location.href = '/';
             } else {
                 // Mostrar mensagem de erro
                 console.error('Login failed:', data.message);
@@ -76,11 +75,11 @@ export default function LoginPage() {
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="senha" className="block text-sm font-medium text-gray-700">Senha</label>
                         <input
                             type="password"
-                            id="password"
-                            name="password"
+                            id="senha"
+                            name="senha"
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
@@ -104,11 +103,11 @@ export default function LoginPage() {
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="senha" className="block text-sm font-medium text-gray-700">Senha</label>
                         <input
                             type="password"
-                            id="password"
-                            name="password"
+                            id="senha"
+                            name="senha"
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
@@ -121,7 +120,7 @@ export default function LoginPage() {
                     </button>
                 </form>
                 <p className="mt-4 text-center text-sm text-gray-600">
-                    Não tem uma conta? <Link href="/register" className="text-blue-600 hover:underline">Cadastrar</Link>
+                    Não tem uma conta? <Link href="/register/aluno" className="text-blue-600 hover:underline">Cadastrar Aluno</Link> | <Link href="/register/empresa" className="text-blue-600 hover:underline">Cadastrar Empresa</Link>
                 </p>
             </div>
         </div>

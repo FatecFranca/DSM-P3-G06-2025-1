@@ -22,6 +22,11 @@ model Empresas {
   descricao String
   historia  String?
   vagas     Vagas[]
+  cep       String
+  rua       String
+  bairro    String
+  numero    String
+  uf        String
 }
 
 model Vagas {
