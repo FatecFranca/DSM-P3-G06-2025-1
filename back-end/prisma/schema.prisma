@@ -82,7 +82,8 @@ model Cursos {
 model Professores {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   nome        String
-  cpf         String
+  cpf         String   @unique
+  senha       String
   telefone    String
   cep         String
   rua         String
