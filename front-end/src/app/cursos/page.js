@@ -64,8 +64,8 @@ export default function Cursos() {
     return (
         <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Cursos Disponíveis</h1>
-                <p className="text-gray-600 mb-6">Encontre o curso perfeito para sua carreira</p>
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Cursos</h1>
+                <p className="text-gray-600 mb-6">Estude conosco, cheque nossos cursos &#128071; </p>
                 
                 {/* Barra de pesquisa */}
                 <div className="mb-8">

@@ -65,8 +65,8 @@ export default function Vagas() {
     return (
         <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Vagas Disponíveis</h1>
-                <p className="text-gray-600 mb-6">Encontre a oportunidade perfeita para sua carreira</p>
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Mercado de Trabalho</h1>
+                <p className="text-gray-600 mb-6">Encontre aqui a sua oportunidade para dar o START numa carreira &#129520; </p>
                 
                 {/* Barra de pesquisa */}
                 <div className="mb-8">
