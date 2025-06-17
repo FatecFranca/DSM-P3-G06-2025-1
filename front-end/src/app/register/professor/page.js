@@ -34,12 +34,15 @@ export default function RegisterProfessor() {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
-    fetch(`${ApiLink}/auth/register/professor`, {
+    fetch(`${ApiLink}/professores`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 409) throw new Error('CPF já cadastrado');
+        return res.json();
+      })
       .then(professor => {
         if (professor && professor.nome) {
           localStorage.setItem('user', JSON.stringify({ nome: professor.nome, tipo: 'professor', id: professor.id }));
@@ -48,7 +51,7 @@ export default function RegisterProfessor() {
           setError('Erro ao cadastrar professor');
         }
       })
-      .catch(() => setError('Erro ao cadastrar professor'));
+      .catch((err) => setError(err.message || 'Erro ao cadastrar professor'));
   }
 
   return (
@@ -64,12 +67,7 @@ export default function RegisterProfessor() {
         <input name="bairro" placeholder="Bairro" required className="mb-2 w-full p-2 border rounded" value={endereco.bairro} onChange={e => setEndereco({ ...endereco, bairro: e.target.value })} />
         <input name="numero" placeholder="Número" required className="mb-2 w-full p-2 border rounded" />
         <input name="uf" placeholder="UF" required className="mb-2 w-full p-2 border rounded" value={endereco.uf} onChange={e => setEndereco({ ...endereco, uf: e.target.value })} />
-        <select name="plano_id" required className="mb-2 w-full p-2 border rounded">
-          <option value="">Selecione um plano</option>
-          {planos.map(plano => (
-            <option key={plano.id} value={plano.id}>{plano.nome}</option>
-          ))}
-        </select>
+        <input name="complemento" placeholder="Complemento" className="mb-2 w-full p-2 border rounded" />
         <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Cadastrar</button>
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>

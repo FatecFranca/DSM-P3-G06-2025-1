@@ -4,8 +4,11 @@ const controller = {};
 
 controller.create = async function(req, res) {
   try {
-    await prisma.professores.create({ data: req.body });
-    res.status(201).end();
+    // Verifica se já existe professor com o mesmo CPF
+    const exists = await prisma.professores.findUnique({ where: { cpf: req.body.cpf } });
+    if (exists) return res.status(409).json({ success: false, message: 'CPF já cadastrado' });
+    const novo = await prisma.professores.create({ data: req.body });
+    res.status(201).json(novo);
   } catch (error) {
     console.error(error);
     res.status(500).send(error);

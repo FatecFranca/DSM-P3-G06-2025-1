@@ -30,6 +30,20 @@ router.post('/login/empresa', async (req, res) => {
   }
 });
 
+// Login Professor
+router.post('/login/professor', async (req, res) => {
+  const { cpf, senha } = req.body;
+  try {
+    const professor = await prisma.professores.findUnique({ where: { cpf } });
+    if (!professor) return res.status(401).json({ success: false, message: 'Professor não encontrado' });
+    if (professor.senha !== senha) return res.status(401).json({ success: false, message: 'Senha incorreta' });
+    res.json({ success: true, user: { nome: professor.nome, tipo: 'professor', id: professor.id } });
+  } catch (error) {
+    console.error('Erro no login de professor:', error);
+    res.status(500).json({ success: false, message: 'Erro no login', error: error.message });
+  }
+});
+
 // Cadastro Aluno
 router.post('/register/aluno', async (req, res) => {
   try {
