@@ -7,6 +7,7 @@ export default function Vagas() {
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [empresa, setEmpresa] = useState(null);
 
     useEffect(() => {
         const fetchVagas = async () => {
@@ -40,6 +41,16 @@ export default function Vagas() {
         fetchVagas();
     }, []);
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const user = localStorage.getItem('user');
+            if (user) {
+                const parsed = JSON.parse(user);
+                if (parsed.tipo === 'empresa') setEmpresa(parsed);
+            }
+        }
+    }, []);
+
     const filteredVagas = vagas.filter(vaga =>
         vaga.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (vaga.descricao && vaga.descricao.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -67,7 +78,13 @@ export default function Vagas() {
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-3xl font-bold text-gray-800 mb-2">Mercado de Trabalho</h1>
                 <p className="text-gray-600 mb-6">Encontre aqui a sua oportunidade para dar o START numa carreira &#129520; </p>
-                
+                {empresa && (
+                  <div className="mb-6">
+                    <Link href="/vagas/cadastrar">
+                      <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors">Cadastrar Vaga</button>
+                    </Link>
+                  </div>
+                )}
                 {/* Barra de pesquisa */}
                 <div className="mb-8">
                     <input
