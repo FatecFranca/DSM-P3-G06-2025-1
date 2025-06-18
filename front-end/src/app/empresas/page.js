@@ -116,7 +116,7 @@ export default function EmpresasPage() {
                                     <Link href={`/vagas?empresa=${empresa.id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium">
                                         Ver vagas
                                     </Link>
-                                    <Link href={`/empresas/contato/${empresa.id}`}>
+                                    <Link href={`/empresas/${empresa.id}`}>
                                         <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
                                             Contatar
                                         </button>
