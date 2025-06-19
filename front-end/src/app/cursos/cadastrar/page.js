@@ -272,7 +272,7 @@ export default function CadastrarCurso() {
                 value={novoVideo}
                 onChange={(e) => setNovoVideo(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddVideo())}
-                placeholder="Nome do vídeo (ex: aula-01 ou aula-01.mp4)"
+                placeholder="Link dos vídeos das aulas"
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
