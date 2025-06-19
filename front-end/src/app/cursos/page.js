@@ -39,7 +39,6 @@ export default function Cursos() {
 
         fetchCursos();
 
-        // Verifica o tipo do usuário no localStorage
         const userData = localStorage.getItem('user');
         if (userData) {
             const user = JSON.parse(userData);

@@ -12,13 +12,11 @@ export default function PlanosPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  // Verifica se o usuário está logado ao carregar a página
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
     setIsLoggedIn(!!token);
   }, []);
 
-  // Busca os planos da API
   useEffect(() => {
     const fetchPlanos = async () => {
       try {
@@ -44,7 +42,6 @@ export default function PlanosPage() {
 
   const handlePlanoClick = (planoId) => {
     if (!isLoggedIn) {
-      // Redireciona para login e guarda o plano que queria assinar
       router.push(`/login?redirect=/assinar/${planoId}`);
     } else {
       router.push(`/assinar/${planoId}`);
