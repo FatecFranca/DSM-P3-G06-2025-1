@@ -7,25 +7,25 @@ export default function Cursos() {
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isProfessor, setIsProfessor] = useState(false);
 
     useEffect(() => {
         const fetchCursos = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
-                
-                // Busca os cursos no backend local
+
                 const response = await fetch('http://localhost:8080/cursos', {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`Erro ${response.status}: ${response.statusText}`);
                 }
-                
+
                 const data = await response.json();
                 setCursos(data);
             } catch (err) {
@@ -38,6 +38,13 @@ export default function Cursos() {
         };
 
         fetchCursos();
+
+        // Verifica o tipo do usuário no localStorage
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            const user = JSON.parse(userData);
+            setIsProfessor(user.tipo === 'professor');
+        }
     }, []);
 
     const filteredCursos = cursos.filter(curso =>
@@ -64,9 +71,22 @@ export default function Cursos() {
     return (
         <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Cursos</h1>
-                <p className="text-gray-600 mb-6">Estude conosco, cheque nossos cursos &#128071; </p>
-                
+                <div className="flex justify-between items-start mb-6">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">Cursos</h1>
+                        <p className="text-gray-600">Estude conosco, cheque nossos cursos &#128071;</p>
+                    </div>
+                    
+                    {/* Botão de cadastro visível apenas para professores */}
+                    {isProfessor && (
+                        <Link href="/cursos/cadastrar">
+                            <button className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
+                                Cadastrar Novo Curso
+                            </button>
+                        </Link>
+                    )}
+                </div>
+
                 {/* Barra de pesquisa */}
                 <div className="mb-8">
                     <input
