@@ -1,56 +1,47 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const ApiLink = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
-export default function CursoDetalhe() {
-  const params = useParams();
+export default function InscricaoCursoPage() {
   const router = useRouter();
-  const { id } = params;
   const [curso, setCurso] = useState(null);
-  const [inscrito, setInscrito] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [aulaAtual, setAulaAtual] = useState(0);
+  const [success, setSuccess] = useState(false);
+  const [searchParams, setSearchParams] = useState(null);
 
   useEffect(() => {
-    if (!id) return;
-    
+    // Obter o ID do curso da URL
+    const params = new URLSearchParams(window.location.search);
+    setSearchParams(params);
+    const cursoId = params.get('id');
+
+    if (!cursoId) {
+      setError('ID do curso não especificado');
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       try {
         setLoading(true);
         
-        // Verifica se o usuário está logado
+        // Verificar se o usuário está logado
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
-          router.push('/login');
+          router.push(`/login?redirect=/inscrever/curso?id=${cursoId}`);
           return;
         }
 
-        // Busca os dados do curso e verifica inscrição em paralelo
-        const [cursoRes, inscricaoRes] = await Promise.all([
-          fetch(`${ApiLink}/cursos/${id}`),
-          fetch(`${ApiLink}/inscricoes/verificar`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-              usuario_id: user.id || user._id,
-              curso_id: id
-            })
-          })
-        ]);
-
-        if (!cursoRes.ok) throw new Error('Curso não encontrado');
-        if (!inscricaoRes.ok) throw new Error('Erro ao verificar inscrição');
-
-        const cursoData = await cursoRes.json();
-        setCurso(cursoData);
-        setInscrito(inscricaoRes.status === 200);
+        // Buscar dados do curso
+        const response = await fetch(`${ApiLink}/cursos/${cursoId}`);
+        if (!response.ok) throw new Error('Curso não encontrado');
+        
+        const data = await response.json();
+        setCurso(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -59,41 +50,46 @@ export default function CursoDetalhe() {
     };
 
     fetchData();
-  }, [id, router]);
+  }, [router]);
 
   const handleInscrever = async () => {
     try {
+      setLoading(true);
+      const cursoId = searchParams.get('id');
       const user = JSON.parse(localStorage.getItem('user'));
-      if (!user) {
-        router.push('/login');
-        return;
-      }
+      const token = localStorage.getItem('token');
 
-      const res = await fetch(`${ApiLink}/inscricoes`, {
+      const response = await fetch(`${ApiLink}/inscricoes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           usuario_id: user.id || user._id,
-          curso_id: id
+          curso_id: cursoId
         })
       });
 
-      if (!res.ok) throw new Error('Erro ao se inscrever no curso');
+      if (!response.ok) throw new Error('Erro ao realizar inscrição');
       
-      setInscrito(true);
+      setSuccess(true);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p>Carregando curso...</p>
+          <h1 className="text-2xl font-bold mb-4">Carregando informações do curso...</h1>
+          <div className="animate-pulse space-y-4">
+            <div className="w-64 h-8 bg-gray-200 rounded mx-auto"></div>
+            <div className="w-full max-w-md h-32 bg-gray-200 rounded-lg mx-auto"></div>
+          </div>
         </div>
       </div>
     );
@@ -101,153 +97,123 @@ export default function CursoDetalhe() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center p-6 bg-white rounded-lg shadow-md max-w-md">
-          <h2 className="text-xl font-bold text-red-600 mb-4">Erro</h2>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center p-6 bg-red-100 rounded-lg max-w-md">
+          <h1 className="text-xl font-bold mb-2">Erro</h1>
           <p className="mb-4">{error}</p>
-          <Link href="/cursos" className="text-blue-600 hover:underline">
-            Voltar para a lista de cursos
-          </Link>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              Tentar novamente
+            </button>
+            <Link
+              href="/cursos"
+              className="px-4 py-2 bg-gray-600 text-white rounded"
+            >
+              Voltar para cursos
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (!curso) {
+  if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p>Curso não encontrado</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center p-6 bg-white rounded-lg shadow-md max-w-md">
+          <div className="text-green-500 mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold mb-2">Inscrição realizada!</h2>
+          <p className="mb-6">Você agora está inscrito no curso: {curso?.nome}</p>
+          <div className="flex justify-center gap-4">
+            <Link
+              href={`/cursos?id=${curso?.id}`}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              Ver Curso
+            </Link>
+            <Link
+              href="/cursos"
+              className="px-4 py-2 bg-gray-600 text-white rounded"
+            >
+              Explorar mais cursos
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {/* Cabeçalho do curso */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{curso.nome}</h1>
-          <p className="text-gray-600 mb-4">{curso.descricao}</p>
-          
-          <div className="flex flex-wrap gap-4 mb-6">
-            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-              Duração: {curso.duracao || 'Não especificada'}
-            </div>
-            <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-              {curso.videos?.length || 0} aulas
-            </div>
-          </div>
-
-          {!inscrito ? (
-            <button
-              onClick={handleInscrever}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-300"
-            >
-              Inscrever-se no Curso
-            </button>
-          ) : (
-            <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg inline-flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Você está inscrito neste curso
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-blue-600 p-6 text-white">
+          <h1 className="text-2xl font-bold">Confirmar Inscrição</h1>
+          <p className="opacity-90">Confirme os detalhes antes de se inscrever</p>
         </div>
-
-        {/* Conteúdo do curso */}
-        {inscrito && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Player de vídeo */}
-            <div className="lg:col-span-2 bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="aspect-w-16 aspect-h-9 bg-black">
-                {curso.videos?.length > 0 ? (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${extrairIdYoutube(curso.videos[aulaAtual])}`}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-white">
-                    Nenhum vídeo disponível
-                  </div>
-                )}
-              </div>
+        
+        <div className="p-6">
+          {curso && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">{curso.nome}</h2>
+              <p className="text-gray-700 mb-4">{curso.descricao}</p>
               
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2">
-                  {curso.videos?.length > 0 ? `Aula ${aulaAtual + 1}: ${curso.videos[aulaAtual]}` : 'Nenhuma aula disponível'}
-                </h2>
-                
-                <div className="flex space-x-4 mt-4">
-                  {aulaAtual > 0 && (
-                    <button
-                      onClick={() => setAulaAtual(aulaAtual - 1)}
-                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
-                    >
-                      Aula anterior
-                    </button>
-                  )}
-                  
-                  {aulaAtual < curso.videos?.length - 1 && (
-                    <button
-                      onClick={() => setAulaAtual(aulaAtual + 1)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300"
-                    >
-                      Próxima aula
-                    </button>
-                  )}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500">Duração</h3>
+                  <p>{curso.duracao || 'Não informada'}</p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500">Professor</h3>
+                  <p>{curso.professor?.nome || 'Não informado'}</p>
                 </div>
               </div>
-            </div>
-
-            {/* Lista de aulas */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold">Aulas do Curso</h3>
-              </div>
               
-              <div className="divide-y divide-gray-200">
-                {curso.videos?.length > 0 ? (
-                  curso.videos.map((video, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setAulaAtual(index)}
-                      className={`w-full text-left p-4 hover:bg-gray-50 transition-colors duration-200 ${aulaAtual === index ? 'bg-blue-50 text-blue-600' : ''}`}
-                    >
-                      <div className="flex items-center">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${aulaAtual === index ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'}`}>
+              {curso.videos?.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500">Conteúdo</h3>
+                  <div className="mt-2 space-y-2">
+                    {curso.videos.slice(0, 3).map((video, index) => (
+                      <div key={index} className="flex items-center text-sm">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2">
                           {index + 1}
-                        </div>
-                        <span className="truncate">{video}</span>
+                        </span>
+                        {typeof video === 'string' ? video.replace('.mp4', '') : `Aula ${index + 1}`}
                       </div>
-                    </button>
-                  ))
-                ) : (
-                  <div className="p-4 text-gray-500">Nenhuma aula cadastrada</div>
-                )}
-              </div>
+                    ))}
+                    {curso.videos.length > 3 && (
+                      <p className="text-sm text-gray-500">+ {curso.videos.length - 3} aulas...</p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
+          )}
+
+          <div className="border-t pt-6">
+            <button
+              onClick={handleInscrever}
+              disabled={loading}
+              className={`w-full py-3 px-4 rounded-lg font-medium text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}
+            >
+              {loading ? 'Processando...' : 'Confirmar Inscrição'}
+            </button>
+            
+            <Link
+              href={`/cursos?id=${curso?.id}`}
+              className="block text-center mt-4 text-blue-600 hover:underline"
+            >
+              Voltar
+            </Link>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
-}
-
-// Função auxiliar para extrair ID do YouTube
-function extrairIdYoutube(url) {
-  if (!url) return '';
-  
-  if (!url.includes('/') && !url.includes('=') && !url.includes('.')) {
-    return url;
-  }
-  
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  
-  return (match && match[2].length === 11) ? match[2] : url;
 }

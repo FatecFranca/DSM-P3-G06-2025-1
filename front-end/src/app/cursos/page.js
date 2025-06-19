@@ -152,7 +152,7 @@ export default function Cursos() {
                                         </div>
                                     </div>
 
-                                    <Link href={`/inscrever/curso/${curso.id}`}>
+                                    <Link href={`/inscrever/curso?id=${curso.id}`}>
                                         <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
                                             Inscrever-se
                                         </button>
