@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const ApiLink = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
@@ -8,7 +9,16 @@ export default function PlanosPage() {
   const [planos, setPlanos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
+  // Verifica se o usuário está logado ao carregar a página
+  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+    setIsLoggedIn(!!token);
+  }, []);
+
+  // Busca os planos da API
   useEffect(() => {
     const fetchPlanos = async () => {
       try {
@@ -31,6 +41,15 @@ export default function PlanosPage() {
 
     fetchPlanos();
   }, []);
+
+  const handlePlanoClick = (planoId) => {
+    if (!isLoggedIn) {
+      // Redireciona para login e guarda o plano que queria assinar
+      router.push(`/login?redirect=/assinar/${planoId}`);
+    } else {
+      router.push(`/assinar/${planoId}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -112,17 +131,16 @@ export default function PlanosPage() {
                 </p>
 
                 <div className="mt-8">
-                  <Link href={`/assinar/${plano.id}`}>
-                    <button 
-                      className={`w-full py-4 px-6 rounded-lg font-bold text-lg ${
-                        plano.tipo === 'Pago' 
-                          ? 'bg-white text-blue-600 hover:bg-gray-100' 
-                          : 'bg-gray-900 text-white hover:bg-gray-800'
-                      }`}
-                    >
-                      {plano.tipo === 'Pago' ? 'Assinar agora' : 'Começar grátis'}
-                    </button>
-                  </Link>
+                  <button 
+                    onClick={() => handlePlanoClick(plano.id)}
+                    className={`w-full py-4 px-6 rounded-lg font-bold text-lg ${
+                      plano.tipo === 'Pago' 
+                        ? 'bg-white text-blue-600 hover:bg-gray-100' 
+                        : 'bg-gray-900 text-white hover:bg-gray-800'
+                    }`}
+                  >
+                    {plano.tipo === 'Pago' ? 'Assinar agora' : 'Começar grátis'}
+                  </button>
                 </div>
               </div>
 
