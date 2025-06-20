@@ -1,33 +1,136 @@
-DSM-P3-G06-2025-1 <br>
-GRUPO DO PROJETO INTERDISCIPLINAR FATEC FRANCA <br>
+## DSM-P3-G06-2025-1: Sistema de Estudo / Projecto Interdisciplinar FATEC Franca
 
-PARTICIPANTES:
+**Grupo do Projeto**: DSM-P3-G06-2025-1
 
-GABRIEL ANDRADE ALEIXO <br>
-GABRIEL CAMARA DE OLIVEIRA <br>
-URIEL MONTE PAZ DE ARAÚJO <br>
-HUDSON RIBEIRO BARBARA JÚNIOR <br>
+**Participantes:**
 
-# Requerimentos para executar o projeto
+* Gabriel Andrade Aleixo
+* Gabriel Câmara de Oliveira
+* Uriel Monte Paz de Araújo
+* Hudson Ribeiro Bárbara Júnior
 
-Node tem que estár instalado
+---
 
-Caso queira rodar localmente instale o MongoDB
-https://faustocintra.com.br/desenvolvimento-back-end/configurando-o-mongodb-server-local-para-uso-com-prisma-orm/
+## Sumário
 
-# Como executar o projeto
+1. [Descrição do Projeto](#descrição-do-projeto)
+2. [Tecnologias Utilizadas](#tecnologias-utilizadas)
+3. [Pré-requisitos](#pré-requisitos)
+4. [Instalação e Configuração](#instalação-e-configuração)
 
-### Clone o repositoria em uma pasta
+   * [Clone do Repositório](#clone-do-repositório)
+   * [Configuração do Back-end](#configuração-do-back-end)
+   * [Configuração do Front-end](#configuração-do-front-end)
+5. [Variáveis de Ambiente](#variáveis-de-ambiente)
+6. [Como Executar](#como-executar)
+
+   * [Executando o Back-end](#executando-o-back-end)
+   * [Executando o Front-end](#executando-o-front-end)
+7. [Vídeo Demonstrativo](#vídeo-demonstrativo)
+8. [Boas Práticas](#boas-práticas)
+9. [Contribuição](#contribuição)
+10. [Licença](#licença)
+
+---
+
+## Descrição do Projeto
+
+Este projeto consiste em um sistema full-stack desenvolvido para atender aos requisitos do Projeto Interdisciplinar da FATEC Franca. A aplicação envolve um back-end em Node.js com Prisma ORM e um front-end em Next.js.
+
+---
+
+## Tecnologias Utilizadas
+
+* **Back-end**:
+
+  * Node.js
+  * Express
+  * Prisma ORM
+  * MongoDB (Atlas ou local)
+* **Front-end**:
+
+  * Next.js (React)
+  * Tailwind CSS (ou outro framework de estilo, conforme preferência)
+* **Ferramentas de Desenvolvimento**:
+
+  * Git/GitHub para versionamento
+  * VSCode (ou editor de preferência)
+  * RapidAPI (para testes de API)
+* **Outros**:
+
+  * npm
+
+---
+
+## Pré-requisitos
+
+Antes de executar o projeto, verifique se você possui:
+
+* **Node.js** instalado (versão recomendada: >= 16.x).
+* **npm** (vem junto com o Node.js) ou Yarn.
+* **MongoDB** se deseja rodar localmente. Caso prefira usar um cluster na nuvem (MongoDB Atlas), tenha a string de conexão.
+
+> Caso não deseje instalar MongoDB localmente, você pode pular o passo de instalação e usar um cluster no Atlas.
+
+---
+
+## Instalação e Configuração
+
+### Clone do Repositório
+
+No terminal, execute:
+
 ```bash
-git clone https://github.com/FatecFranca/DSM-P3-G06-2025-1.git
+git clone https://github.com/FatecFranca/DSM-P3-G06-2025-1.git\
+```
+Em seguida, navegue até a pasta do projeto:
+```bash
+cd DSM-P3-G06-2025-1
 ```
 
-### Agora no terminal digite o comando
-```bash
-cd .\DSM-P3-G06-2025-1\back-end\
-```
+### Configuração do Back-end
 
-Dentro da pasta back-end (Onde estamos agora) crie um arquivo chamado ".env" e coloque esses código de conexão nele
+1. Navegue até a pasta do back-end:
+
+   ```bash
+   cd back-end
+   ```
+2. Crie um arquivo `.env` na raiz da pasta `back-end` com as variáveis de ambiente necessárias.
+3. Instale dependências:
+
+   ```bash
+   npm install
+   ```
+4. Gere o cliente do Prisma:
+
+   ```bash
+   npx prisma generate
+   ```
+
+> **Importante**: não versionar o arquivo `.env` no Git. Utilize o `.gitignore` para evitar expor credenciais.
+
+### Configuração do Front-end
+
+1. Em outra aba/terminal, navegue até a pasta do front-end:
+
+   ```bash
+   cd front-end
+   ```
+2. Crie um arquivo `.env.local` (ou `.env`) na raiz da pasta `front-end` com as variáveis de ambiente necessárias.
+3. Instale dependências:
+
+   ```bash
+   npm install
+   ```
+
+---
+
+## Variáveis de Ambiente
+
+Abaixo exemplos de variáveis que devem constar nos arquivos `.env` para cada parte. **Substitua pelos seus valores reais**:
+
+### Back-end (`back-end/.env`)
+
 ```env
 # Environment variables declared in this file are automatically made available to Prisma.
 # See the documentation for more detail: https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema
@@ -38,43 +141,58 @@ Dentro da pasta back-end (Onde estamos agora) crie um arquivo chamado ".env" e c
 DATABASE_URL="mongodb+srv://StudyPlus:senha123@studyplus.rbcn1rr.mongodb.net/StudyPlus?retryWrites=true&w=majority&appName=StudyPlus"
 ```
 
-depois digite os seguintes códigos
-```bash
-npm i
-```
-```bash
-npx prisma generate
-```
+### Front-end (`front-end/.env.local` ou `.env`)
 
-agora podemos executar o back-end do projeto usando
-```bash
-npm run dev
-```
-
-### Abra otro terminal para executarmos o front e dê o comando
-```bash
-cd .\DSM-P3-G06-2025-1\front-end\
-```
-
-Dentro da pasta front-end (Onde estamos agora) crie um arquivo chamado ".env" e coloque esses código de conexão nele
 ```env
 NEXT_PUBLIC_API_URL="http://localhost:8080"
 ```
 
-agora nele execute
-```bash
-npm i
-```
+> Se for implantar em produção, ajuste essas variáveis para apontar para o domínio/URL corretos.
 
-depois
-```bash
-npm run dev
-```
+---
 
-### Agora basta apenas ir no seu navegador e pesquisar por http://localhost:3000/
+## Como Executar
 
-# Veja um vídeo explicativo
+### Executando o Back-end
+
+1. Certifique-se de que as variáveis em `back-end/.env` estão corretas.
+2. Inicie o servidor:
+
+   ```bash
+   npm run dev
+   ```
+3. O servidor estará disponível em `http://localhost:8080` (ou porta configurada).
+4. Utilize Postman/Insomnia ou similar para testar rotas da API (endpoints REST ou GraphQL, conforme implementado).
+
+### Executando o Front-end
+
+1. Certifique-se de que `front-end/.env.local` aponta para a URL correta do back-end.
+2. Inicie a aplicação:
+
+   ```bash
+   npm run dev
+   ```
+3. Acesse no navegador:
+
+   ```
+   http://localhost:3000
+   ```
+
+---
+
+## Vídeo Demonstrativo
 
 https://github.com/user-attachments/assets/bbe6d8d1-d3b6-4d8e-a1bf-ba0de98824c5
 
 
+---
+
+## Boas Práticas
+
+* Mantenha o `.env` fora do controle de versão.
+* Documente endpoints e fluxos importantes.
+* Use linting e formatação consistente (ESLint, Prettier).
+* Escreva testes automatizados (unitários/integrados) sempre que possível.
+* Comentários claros e README atualizado.
+
+---
