@@ -28,7 +28,7 @@ export default function InscricaoCursoPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Verificar se o usuário está logado
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
@@ -39,7 +39,7 @@ export default function InscricaoCursoPage() {
         // Buscar dados do curso
         const response = await fetch(`${ApiLink}/cursos/${cursoId}`);
         if (!response.ok) throw new Error('Curso não encontrado');
-        
+
         const data = await response.json();
         setCurso(data);
       } catch (err) {
@@ -72,7 +72,7 @@ export default function InscricaoCursoPage() {
       });
 
       if (!response.ok) throw new Error('Erro ao realizar inscrição');
-      
+
       setSuccess(true);
     } catch (err) {
       setError(err.message);
@@ -157,13 +157,13 @@ export default function InscricaoCursoPage() {
           <h1 className="text-2xl font-bold">Confirmar Inscrição</h1>
           <p className="opacity-90">Confirme os detalhes antes de se inscrever</p>
         </div>
-        
+
         <div className="p-6">
           {curso && (
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">{curso.nome}</h2>
               <p className="text-gray-700 mb-4">{curso.descricao}</p>
-              
+
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Duração</h3>
@@ -174,17 +174,19 @@ export default function InscricaoCursoPage() {
                   <p>{curso.professor?.nome || 'Não informado'}</p>
                 </div>
               </div>
-              
+
               {curso.videos?.length > 0 && (
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Conteúdo</h3>
                   <div className="mt-2 space-y-2">
                     {curso.videos.slice(0, 3).map((video, index) => (
                       <div key={index} className="flex items-center text-sm">
-                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2">
-                          {index + 1}
-                        </span>
-                        {typeof video === 'string' ? video.replace('.mp4', '') : `Aula ${index + 1}`}
+                          <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2">
+                            {index + 1}
+                          </span>
+                        <a href={curso.videos} target='_blank'>
+                          {typeof video === 'string' ? video.replace('.mp4', '') : `Aula ${index + 1}`}
+                        </a>
                       </div>
                     ))}
                     {curso.videos.length > 3 && (
@@ -204,7 +206,7 @@ export default function InscricaoCursoPage() {
             >
               {loading ? 'Processando...' : 'Confirmar Inscrição'}
             </button>
-            
+
             <Link
               href={`/cursos?id=${curso?.id}`}
               className="block text-center mt-4 text-blue-600 hover:underline"
