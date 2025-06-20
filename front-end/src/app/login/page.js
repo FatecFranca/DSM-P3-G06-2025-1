@@ -19,12 +19,12 @@ export default function LoginPage() {
     try {
       const formData = new FormData(event.target);
       const data = Object.fromEntries(formData.entries());
-      
+
       let endpoint = '';
       let identifierField = '';
-      
+
       // Configura os endpoints e campos de identificação
-      switch(userType) {
+      switch (userType) {
         case 'empresa':
           endpoint = 'empresa';
           identifierField = 'cnpj';
@@ -60,11 +60,12 @@ export default function LoginPage() {
       setError(error.message || 'Erro ao fazer login. Tente novamente.');
     } finally {
       setLoading(false);
+      window.location.reload();
     }
-  };
+  }
 
   const getTabLabel = (tab) => {
-    switch(tab) {
+    switch (tab) {
       case 'aluno': return 'Aluno';
       case 'empresa': return 'Empresa';
       case 'professor': return 'Professor';
@@ -80,11 +81,10 @@ export default function LoginPage() {
           {['aluno', 'empresa', 'professor'].map((tab) => (
             <button
               key={tab}
-              className={`flex-1 py-4 px-6 text-center font-medium ${
-                activeTab === tab 
-                  ? 'text-blue-600 border-b-2 border-blue-600' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex-1 py-4 px-6 text-center font-medium ${activeTab === tab
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
               onClick={() => setActiveTab(tab)}
             >
               {getTabLabel(tab)}
@@ -95,7 +95,7 @@ export default function LoginPage() {
         {/* Conteúdo do formulário */}
         <div className="p-8">
           <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Login</h2>
-          
+
           {error && (
             <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
               {error}
@@ -129,9 +129,8 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 px-4 rounded-lg font-semibold text-white ${
-                  loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors`}
+                className={`w-full py-3 px-4 rounded-lg font-semibold text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors`}
               >
                 {loading ? 'Entrando...' : 'Entrar'}
               </button>
@@ -164,9 +163,8 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 px-4 rounded-lg font-semibold text-white ${
-                  loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors`}
+                className={`w-full py-3 px-4 rounded-lg font-semibold text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors`}
               >
                 {loading ? 'Entrando...' : 'Entrar'}
               </button>
@@ -200,9 +198,8 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 px-4 rounded-lg font-semibold text-white ${
-                  loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors`}
+                className={`w-full py-3 px-4 rounded-lg font-semibold text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors`}
               >
                 {loading ? 'Entrando...' : 'Entrar'}
               </button>
@@ -213,8 +210,8 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Não tem uma conta?{' '}
-              <Link 
-                href={`/register/${activeTab}`} 
+              <Link
+                href={`/register/${activeTab}`}
                 className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
               >
                 Cadastre-se como {getTabLabel(activeTab)}
