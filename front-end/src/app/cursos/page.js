@@ -131,26 +131,6 @@ export default function Cursos() {
                                     </div>
                                     
                                     <p className="text-gray-600 mb-4">{curso.descricao}</p>
-                                    
-                                    <div className="mb-4">
-                                        <p className="text-sm font-medium text-gray-500 mb-1">Professor:</p>
-                                        <p className="text-gray-700">{curso.professor?.nome || "Não especificado"}</p>
-                                    </div>
-                                    
-                                    <div className="mb-4">
-                                        <p className="text-sm font-medium text-gray-500 mb-1">Conteúdo:</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {curso.videos?.length > 0 ? (
-                                                curso.videos.map((video, i) => (
-                                                    <span key={i} className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
-                                                        {typeof video === 'string' ? video.replace('.mp4', '') : `Aula ${i + 1}`}
-                                                    </span>
-                                                ))
-                                            ) : (
-                                                <span className="text-gray-500 text-sm">Nenhum vídeo disponível</span>
-                                            )}
-                                        </div>
-                                    </div>
 
                                     <Link href={`/inscrever/curso?id=${curso.id}`}>
                                         <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
