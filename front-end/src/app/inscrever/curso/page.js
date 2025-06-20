@@ -214,7 +214,11 @@ export default function InscricaoCursoPage() {
               className={`w-full py-3 px-4 rounded-lg font-medium text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}
             >
               {loading ? 'Processando...' : 'Confirmar Inscrição'}
+<<<<<<< HEAD
             </button> */}
+=======
+            </button>
+>>>>>>> 673a792838c612ac75aa639cc7841702f0e781b0
             
             <Link
               href={`/cursos`}
