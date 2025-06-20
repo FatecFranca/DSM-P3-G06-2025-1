@@ -55,12 +55,12 @@ export default function LoginPage() {
 
       localStorage.setItem('user', JSON.stringify(responseData.user));
       router.push('/');
+      window.location.reload();
     } catch (error) {
       console.error('Erro no login:', error);
       setError(error.message || 'Erro ao fazer login. Tente novamente.');
     } finally {
       setLoading(false);
-      window.location.reload();
     }
   }
 

@@ -152,8 +152,8 @@ export default function InscricaoVagasPage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div className="bg-blue-600 p-6 text-white">
-          <h1 className="text-2xl font-bold">Confirmar Inscrição</h1>
-          <p className="opacity-90">Confirme os detalhes antes de se inscrever</p>
+          <h1 className="text-2xl font-bold">Detalhes da Vaga</h1>
+          <p className="opacity-90">Veja os detalhes e requerimentos das vagas por aqui</p>
         </div>
         
         <div className="p-6">
@@ -193,13 +193,14 @@ export default function InscricaoVagasPage() {
           )}
 
           <div className="border-t pt-6">
-            <button
+            {/* Botão de confirmação removido também */}
+            {/* <button
               onClick={handleInscrever}
               disabled={loading}
               className={`w-full py-3 px-4 rounded-lg font-medium text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}
             >
               {loading ? 'Processando...' : 'Confirmar Inscrição'}
-            </button>
+            </button> */}
             
             <Link
               href={`/vagas`}

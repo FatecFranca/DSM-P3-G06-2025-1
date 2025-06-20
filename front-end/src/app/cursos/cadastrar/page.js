@@ -75,7 +75,7 @@ export default function CadastrarCurso() {
 
     const videoFormatado = novoVideo.trim().endsWith('.mp4') 
       ? novoVideo.trim() 
-      : `${novoVideo.trim()}.mp4`;
+      : `${novoVideo.trim()}`;
 
     setFormData(prev => ({
       ...prev,

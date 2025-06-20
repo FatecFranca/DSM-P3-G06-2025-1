@@ -1,23 +1,20 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 const ApiLink = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export default function InscricaoCursoPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [curso, setCurso] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [searchParams, setSearchParams] = useState(null);
 
   useEffect(() => {
-    // Obter o ID do curso da URL
-    const params = new URLSearchParams(window.location.search);
-    setSearchParams(params);
-    const cursoId = params.get('id');
+    const cursoId = searchParams.get('id');
 
     if (!cursoId) {
       setError('ID do curso não especificado');
@@ -28,18 +25,16 @@ export default function InscricaoCursoPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        // Verificar se o usuário está logado
+        
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
           router.push(`/login?redirect=/inscrever/curso?id=${cursoId}`);
           return;
         }
 
-        // Buscar dados do curso
         const response = await fetch(`${ApiLink}/cursos/${cursoId}`);
         if (!response.ok) throw new Error('Curso não encontrado');
-
+        
         const data = await response.json();
         setCurso(data);
       } catch (err) {
@@ -50,7 +45,7 @@ export default function InscricaoCursoPage() {
     };
 
     fetchData();
-  }, [router]);
+  }, [router, searchParams]);
 
   const handleInscrever = async () => {
     try {
@@ -72,7 +67,7 @@ export default function InscricaoCursoPage() {
       });
 
       if (!response.ok) throw new Error('Erro ao realizar inscrição');
-
+      
       setSuccess(true);
     } catch (err) {
       setError(err.message);
@@ -133,7 +128,7 @@ export default function InscricaoCursoPage() {
           <p className="mb-6">Você agora está inscrito no curso: {curso?.nome}</p>
           <div className="flex justify-center gap-4">
             <Link
-              href={`/cursos?id=${curso?.id}`}
+              href={`/cursos/${curso?._id}`}
               className="px-4 py-2 bg-blue-600 text-white rounded"
             >
               Ver Curso
@@ -154,16 +149,16 @@ export default function InscricaoCursoPage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div className="bg-blue-600 p-6 text-white">
-          <h1 className="text-2xl font-bold">Confirmar Inscrição</h1>
-          <p className="opacity-90">Confirme os detalhes antes de se inscrever</p>
+          <h1 className="text-2xl font-bold">Detalhes do Curso</h1>
+          <p className="opacity-90">Veja as video aulas por aqui</p>
         </div>
-
+        
         <div className="p-6">
           {curso && (
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">{curso.nome}</h2>
               <p className="text-gray-700 mb-4">{curso.descricao}</p>
-
+              
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Duração</h3>
@@ -174,24 +169,37 @@ export default function InscricaoCursoPage() {
                   <p>{curso.professor?.nome || 'Não informado'}</p>
                 </div>
               </div>
-
+              
               {curso.videos?.length > 0 && (
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Conteúdo</h3>
                   <div className="mt-2 space-y-2">
-                    {curso.videos.slice(0, 3).map((video, index) => (
+                    {curso.videos.map((video, index) => (
                       <div key={index} className="flex items-center text-sm">
-                          <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2">
-                            {index + 1}
-                          </span>
-                        <a href={curso.videos} target='_blank'>
-                          {typeof video === 'string' ? video.replace('.mp4', '') : `Aula ${index + 1}`}
-                        </a>
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center mr-2">
+                          {index + 1}
+                        </span>
+                        {typeof video === 'string' ? (
+                          <a 
+                            href={video} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {video.replace('.mp4', '')}
+                          </a>
+                        ) : (
+                          <a 
+                            href={video.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {video.titulo || `Aula ${index + 1}`}
+                          </a>
+                        )}
                       </div>
                     ))}
-                    {curso.videos.length > 3 && (
-                      <p className="text-sm text-gray-500">+ {curso.videos.length - 3} aulas...</p>
-                    )}
                   </div>
                 </div>
               )}
@@ -199,16 +207,17 @@ export default function InscricaoCursoPage() {
           )}
 
           <div className="border-t pt-6">
-            <button
+            {/* Botão removido de confirmar inscrição */}
+            {/* <button
               onClick={handleInscrever}
               disabled={loading}
               className={`w-full py-3 px-4 rounded-lg font-medium text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}
             >
               {loading ? 'Processando...' : 'Confirmar Inscrição'}
-            </button>
-
+            </button> */}
+            
             <Link
-              href={`/cursos?id=${curso?.id}`}
+              href={`/cursos`}
               className="block text-center mt-4 text-blue-600 hover:underline"
             >
               Voltar
