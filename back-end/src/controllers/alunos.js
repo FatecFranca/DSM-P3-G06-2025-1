@@ -83,4 +83,32 @@ controller.login = async function(req, res) {
   }
 };
 
+controller.updatePlano = async function(req, res) {
+  try {
+    const alunoId = req.params.id;
+    const { plano_id } = req.body;
+
+    // Verifica se plano_id foi passado
+    if (!plano_id) {
+      return res.status(400).json({ success: false, message: 'ID do plano é obrigatório' });
+    }
+
+    // Atualiza apenas o campo plano_id do aluno
+    await prisma.aluno.update({
+      where: { id: alunoId },
+      data: { plano_id }
+    });
+
+    res.status(200).json({ success: true, message: 'Plano atualizado com sucesso' });
+  } catch (error) {
+    if (error?.code === 'P2025') {
+      res.status(404).json({ success: false, message: 'Aluno não encontrado' });
+    } else {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Erro ao atualizar plano', error });
+    }
+  }
+};
+
+
 export default controller;
