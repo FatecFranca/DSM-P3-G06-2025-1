@@ -74,3 +74,7 @@ npm run dev
 ### Agora basta apenas ir no seu navegador e pesquisar por http://localhost:3000/
 
 # Veja um vídeo explicativo
+
+https://github.com/user-attachments/assets/bbe6d8d1-d3b6-4d8e-a1bf-ba0de98824c5
+
+
