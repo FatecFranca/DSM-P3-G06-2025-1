@@ -196,3 +196,9 @@ https://github.com/user-attachments/assets/bbe6d8d1-d3b6-4d8e-a1bf-ba0de98824c5
 * Comentários claros e README atualizado.
 
 ---
+
+## Elevator Pitch 
+
+https://youtu.be/A_Z1UKFsKF0?si=UY-qCi61elZAjY2G
+
+
